@@ -9,7 +9,7 @@ const app = express();
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
 // Store quotes and invoices in memory (in a real app, you'd use a database)
@@ -469,22 +469,14 @@ app.post('/preview-quote', (req, res) => {
 });
 
 // Modified server start code
-const startServer = (port) => {
-    try {
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
-        }).on('error', (err) => {
-            if (err.code === 'EADDRINUSE') {
-                console.log(`Port ${port} is busy, trying ${port + 1}`);
-                startServer(port + 1);
-            } else {
-                console.error(err);
-            }
-        });
-    } catch (err) {
-        console.error(err);
-    }
-};
-
 const PORT = process.env.PORT || 3000;
-startServer(PORT); 
+
+if (process.env.NODE_ENV !== 'production') {
+    // Development server
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+} else {
+    // Production (Vercel) - export the app
+    module.exports = app;
+} 
