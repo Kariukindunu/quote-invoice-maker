@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Settings - <%= companyDetails.name %></title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-building"></i> <%= companyDetails.name %></h1>
+            <nav class="nav-links">
+                <a href="/" class="button secondary"><i class="fas fa-home"></i> Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="settings-container">
+            <div class="form-header">
+                <h2 class="section-title"><i class="fas fa-cog"></i> Company Settings</h2>
+            </div>
+
+            <div class="template-previews">
+                <div class="preview-section">
+                    <h3><i class="fas fa-file-invoice"></i> Document Templates</h3>
+                    
+                    <!-- Invoice Templates -->
+                    <div class="template-type-section">
+                        <h4>Invoice Templates</h4>
+                        <div class="template-grid">
+                            <!-- Classic Template -->
+                            <div class="template-card <%= companyDetails.selectedInvoiceTemplate === 'classic' ? 'selected' : '' %>">
+                                <div class="template-header">
+                                    <h4>Classic</h4>
+                                    <div class="template-actions">
+                                        <button type="button" onclick="previewTemplate('invoice', 'classic')" class="button secondary small">
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                        <input type="radio" name="selectedInvoiceTemplate" value="classic" 
+                                               <%= companyDetails.selectedInvoiceTemplate === 'classic' ? 'checked' : '' %>>
+                                    </div>
+                                </div>
+                                <div class="template-preview invoice-preview classic">
+                                    <div class="preview-company">
+                                        <strong><%= companyDetails.name %></strong>
+                                        <small><%= companyDetails.address %></small>
+                                    </div>
+                                    <div class="preview-content">
+                                        <div class="preview-header">INVOICE</div>
+                                        <div class="preview-table"></div>
+                                        <div class="preview-totals"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modern Template -->
+                            <div class="template-card <%= companyDetails.selectedInvoiceTemplate === 'modern' ? 'selected' : '' %>">
+                                <div class="template-header">
+                                    <h4>Modern</h4>
+                                    <div class="template-actions">
+                                        <button type="button" onclick="previewTemplate('invoice', 'modern')" class="button secondary small">
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                        <input type="radio" name="selectedInvoiceTemplate" value="modern"
+                                               <%= companyDetails.selectedInvoiceTemplate === 'modern' ? 'checked' : '' %>>
+                                    </div>
+                                </div>
+                                <div class="template-preview invoice-preview modern">
+                                    <!-- Modern style preview -->
+                                    <div class="preview-banner"></div>
+                                    <div class="preview-content modern">
+                                        <div class="preview-header">INVOICE</div>
+                                        <div class="preview-table modern"></div>
+                                        <div class="preview-totals modern"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Minimal Template -->
+                            <div class="template-card <%= companyDetails.selectedInvoiceTemplate === 'minimal' ? 'selected' : '' %>">
+                                <div class="template-header">
+                                    <h4>Minimal</h4>
+                                    <div class="template-actions">
+                                        <button type="button" onclick="previewTemplate('invoice', 'minimal')" class="button secondary small">
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                        <input type="radio" name="selectedInvoiceTemplate" value="minimal"
+                                               <%= companyDetails.selectedInvoiceTemplate === 'minimal' ? 'checked' : '' %>>
+                                    </div>
+                                </div>
+                                <div class="template-preview invoice-preview minimal">
+                                    <!-- Minimal style preview -->
+                                    <div class="preview-content minimal">
+                                        <div class="preview-header minimal">INVOICE</div>
+                                        <div class="preview-table minimal"></div>
+                                        <div class="preview-totals minimal"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quote Templates -->
+                    <div class="template-type-section">
+                        <h4>Quote Templates</h4>
+                        <div class="template-grid">
+                            <!-- Classic Template -->
+                            <div class="template-card <%= companyDetails.selectedQuoteTemplate === 'classic' ? 'selected' : '' %>">
+                                <div class="template-header">
+                                    <h4>Classic</h4>
+                                    <div class="template-actions">
+                                        <button type="button" onclick="previewTemplate('quote', 'classic')" class="button secondary small">
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                        <input type="radio" name="selectedQuoteTemplate" value="classic"
+                                               <%= companyDetails.selectedQuoteTemplate === 'classic' ? 'checked' : '' %>>
+                                    </div>
+                                </div>
+                                <div class="template-preview quote-preview classic">
+                                    <!-- Same structure as invoice classic -->
+                                </div>
+                            </div>
+
+                            <!-- Modern Template -->
+                            <div class="template-card <%= companyDetails.selectedQuoteTemplate === 'modern' ? 'selected' : '' %>">
+                                <div class="template-header">
+                                    <h4>Modern</h4>
+                                    <div class="template-actions">
+                                        <button type="button" onclick="previewTemplate('quote', 'modern')" class="button secondary small">
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                        <input type="radio" name="selectedQuoteTemplate" value="modern"
+                                               <%= companyDetails.selectedQuoteTemplate === 'modern' ? 'checked' : '' %>>
+                                    </div>
+                                </div>
+                                <div class="template-preview quote-preview modern">
+                                    <!-- Modern style preview -->
+                                </div>
+                            </div>
+
+                            <!-- Minimal Template -->
+                            <div class="template-card <%= companyDetails.selectedQuoteTemplate === 'minimal' ? 'selected' : '' %>">
+                                <div class="template-header">
+                                    <h4>Minimal</h4>
+                                    <div class="template-actions">
+                                        <button type="button" onclick="previewTemplate('quote', 'minimal')" class="button secondary small">
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                        <input type="radio" name="selectedQuoteTemplate" value="minimal"
+                                               <%= companyDetails.selectedQuoteTemplate === 'minimal' ? 'checked' : '' %>>
+                                    </div>
+                                </div>
+                                <div class="template-preview quote-preview minimal">
+                                    <!-- Minimal style preview -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="/settings" method="POST" class="settings-form">
+                <div class="settings-grid">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
+                        <div class="form-group">
+                            <label for="name">Company Name:</label>
+                            <input type="text" id="name" name="name" value="<%= companyDetails.name %>" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="website">Website:</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-globe"></i>
+                                <input type="text" id="website" name="website" value="<%= companyDetails.website %>" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="currency">Currency:</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-money-bill"></i>
+                                <select id="currency" name="currency" required>
+                                    <option value="KSH" <%= companyDetails.currency === 'KSH' ? 'selected' : '' %>>KSH - Kenyan Shilling</option>
+                                    <option value="USD" <%= companyDetails.currency === 'USD' ? 'selected' : '' %>>USD - US Dollar</option>
+                                    <option value="EUR" <%= companyDetails.currency === 'EUR' ? 'selected' : '' %>>EUR - Euro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
+                        <div class="form-group">
+                            <label for="address">Street Address:</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-location-dot"></i>
+                                <input type="text" id="address" name="address" value="<%= companyDetails.address %>" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group-row">
+                            <div class="form-group">
+                                <label for="city">City:</label>
+                                <input type="text" id="city" name="city" value="<%= companyDetails.city %>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="country">Country:</label>
+                                <input type="text" id="country" name="country" value="<%= companyDetails.country %>" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-address-card"></i> Contact Information</h3>
+                        <div class="form-group">
+                            <label for="phone">Phone:</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="text" id="phone" name="phone" value="<%= companyDetails.phone %>" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" name="email" value="<%= companyDetails.email %>" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section terms-section">
+                        <h3><i class="fas fa-gavel"></i> Terms & Conditions</h3>
+                        <div class="form-group">
+                            <label for="terms">Terms & Conditions:</label>
+                            <div class="terms-editor">
+                                <textarea id="terms" name="terms" rows="6" placeholder="Enter each term on a new line"><%= companyDetails.terms.join('\n') %></textarea>
+                                <div class="terms-preview">
+                                    <h4>Preview:</h4>
+                                    <ol id="termsPreview">
+                                        <% companyDetails.terms.forEach(term => { %>
+                                            <li><%= term %></li>
+                                        <% }); %>
+                                    </ol>
+                                </div>
+                            </div>
+                            <small class="help-text">Enter each term on a new line. These terms will appear on your invoices and quotes.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="button primary"><i class="fas fa-save"></i> Save Settings</button>
+                    <button type="button" onclick="window.location.href='/'" class="button secondary"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Template Preview</h2>
+                <button onclick="closeModal()" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="previewFrame" style="width: 100%; height: 500px; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function previewTemplate(type, style) {
+        const modal = document.getElementById('previewModal');
+        const iframe = document.getElementById('previewFrame');
+        
+        // Generate sample data
+        const sampleData = {
+            number: type === 'invoice' ? 'INV001' : 'Q001',
+            date: new Date().toLocaleDateString(),
+            customerName: 'Sample Customer',
+            items: [
+                { description: 'Item 1', quantity: 1, price: 1000 },
+                { description: 'Item 2', quantity: 2, price: 500 }
+            ],
+            subtotal: 2000,
+            tax: 16,
+            total: 2320,
+            templateStyle: style // Add template style to the data
+        };
+
+        // Send request to preview endpoint
+        fetch(`/preview-${type}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sampleData)
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            iframe.src = URL.createObjectURL(blob);
+            modal.style.display = 'block';
+        });
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('previewModal');
+        modal.style.display = 'none';
+    }
+
+    document.getElementById('terms').addEventListener('input', function() {
+        const terms = this.value.split('\n').filter(term => term.trim() !== '');
+        const previewList = document.getElementById('termsPreview');
+        
+        previewList.innerHTML = terms.map(term => 
+            term.trim() ? `<li>${term}</li>` : ''
+        ).join('');
+    });
+    </script>
+</body>
+</html> 

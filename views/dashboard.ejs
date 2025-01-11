@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defrapad IT Solutions - Invoice & Quote Maker</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Defrapad IT Solutions</h1>
+            <nav class="nav-links">
+                <a href="/settings" class="button secondary">Company Settings</a>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3>Active Quotes</h3>
+                <p><%= quotes.length %></p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Invoices</h3>
+                <p><%= invoices.length %></p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Value</h3>
+                <p>$<%= [...quotes, ...invoices].reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2) %></p>
+            </div>
+        </div>
+
+        <a href="/create-quote" class="button">Create New Quote</a>
+
+        <h2 class="section-title">Quotes</h2>
+        <div class="list">
+            <% quotes.forEach(quote => { %>
+                <div class="item">
+                    <h3>Quote #<%= quote.number %></h3>
+                    <p><strong>Customer:</strong> <%= quote.customerName %></p>
+                    <p><strong>Date:</strong> <%= new Date(quote.date).toLocaleDateString() %></p>
+                    <p><strong>Total:</strong> $<%= quote.total %></p>
+                    <div class="button-group">
+                        <form action="/convert-to-invoice/<%= quote.id %>" method="POST">
+                            <button type="submit">Convert to Invoice</button>
+                        </form>
+                        <a href="/download-quote/<%= quote.id %>" class="button">Download PDF</a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+
+        <h2 class="section-title">Invoices</h2>
+        <div class="list">
+            <% invoices.forEach(invoice => { %>
+                <div class="item">
+                    <h3>Invoice #<%= invoice.number %></h3>
+                    <p><strong>Customer:</strong> <%= invoice.customerName %></p>
+                    <p><strong>Date:</strong> <%= new Date(invoice.date).toLocaleDateString() %></p>
+                    <p><strong>Total:</strong> $<%= invoice.total %></p>
+                    <a href="/download-invoice/<%= invoice.id %>" class="button">Download PDF</a>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</body>
+</html> 
