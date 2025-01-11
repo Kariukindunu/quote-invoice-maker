@@ -123,8 +123,11 @@ function generatePDF(doc, data) {
 
 function generateClassicTemplate(doc, data) {
     // Classic template - Traditional business style
-    if (fs.existsSync(companyDetails.logo)) {
+    try {
         doc.image(companyDetails.logo, 50, 45, { width: 150 });
+    } catch (error) {
+        console.log('Logo not available:', error);
+        // Continue without logo
     }
 
     // Company details on right
@@ -415,57 +418,108 @@ app.post('/convert-to-invoice/:id', (req, res) => {
 });
 
 // Add PDF download routes
-app.get('/download-quote/:id', (req, res) => {
-    const quote = quotes.find(q => q.id === parseInt(req.params.id));
-    if (!quote) {
-        return res.status(404).send('Quote not found');
-    }
+app.get('/download-quote/:id', async (req, res) => {
+    try {
+        const quote = quotes.find(q => q.id === parseInt(req.params.id));
+        if (!quote) {
+            return res.status(404).send('Quote not found');
+        }
 
-    const doc = new PDFDocument();
-    const filename = `quote-${quote.number}.pdf`;
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-    
-    doc.pipe(res);
-    generatePDF(doc, quote);
-    doc.end();
+        const doc = new PDFDocument();
+        const chunks = [];
+
+        doc.on('data', chunk => chunks.push(chunk));
+        doc.on('end', () => {
+            const result = Buffer.concat(chunks);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=quote-${quote.number}.pdf`);
+            res.send(result);
+        });
+
+        generatePDF(doc, quote);
+        doc.end();
+    } catch (error) {
+        console.error('PDF Generation Error:', error);
+        res.status(500).send('Error generating PDF');
+    }
 });
 
-app.get('/download-invoice/:id', (req, res) => {
-    const invoice = invoices.find(i => i.id === parseInt(req.params.id));
-    if (!invoice) {
-        return res.status(404).send('Invoice not found');
-    }
+app.get('/download-invoice/:id', async (req, res) => {
+    try {
+        const invoice = invoices.find(i => i.id === parseInt(req.params.id));
+        if (!invoice) {
+            return res.status(404).send('Invoice not found');
+        }
 
-    const doc = new PDFDocument();
-    const filename = `invoice-${invoice.number}.pdf`;
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-    
-    doc.pipe(res);
-    generatePDF(doc, invoice);
-    doc.end();
+        const doc = new PDFDocument();
+        const chunks = [];
+
+        doc.on('data', chunk => chunks.push(chunk));
+        doc.on('end', () => {
+            const result = Buffer.concat(chunks);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=invoice-${invoice.number}.pdf`);
+            res.send(result);
+        });
+
+        generatePDF(doc, invoice);
+        doc.end();
+    } catch (error) {
+        console.error('PDF Generation Error:', error);
+        res.status(500).send('Error generating PDF');
+    }
 });
 
 // Add preview routes
-app.post('/preview-invoice', (req, res) => {
-    const doc = new PDFDocument();
-    generatePDF(doc, { ...req.body, status: 'invoice' });
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    doc.pipe(res);
-    doc.end();
+app.post('/preview-invoice', async (req, res) => {
+    try {
+        const doc = new PDFDocument();
+        const chunks = [];
+
+        doc.on('data', chunk => chunks.push(chunk));
+        doc.on('end', () => {
+            const result = Buffer.concat(chunks);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.send(result);
+        });
+
+        generatePDF(doc, { ...req.body, status: 'invoice' });
+        doc.end();
+    } catch (error) {
+        console.error('Preview Error:', error);
+        res.status(500).send('Error generating preview');
+    }
 });
 
-app.post('/preview-quote', (req, res) => {
-    const doc = new PDFDocument();
-    generatePDF(doc, { ...req.body, status: 'quote' });
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    doc.pipe(res);
-    doc.end();
+app.post('/preview-quote', async (req, res) => {
+    try {
+        const doc = new PDFDocument();
+        const chunks = [];
+
+        doc.on('data', chunk => chunks.push(chunk));
+        doc.on('end', () => {
+            const result = Buffer.concat(chunks);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.send(result);
+        });
+
+        generatePDF(doc, { ...req.body, status: 'quote' });
+        doc.end();
+    } catch (error) {
+        console.error('Preview Error:', error);
+        res.status(500).send('Error generating preview');
+    }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// 404 handler
+app.use((req, res, next) => {
+    res.status(404).send('Sorry, page not found!');
 });
 
 // Modified server start code
